@@ -13,3 +13,9 @@ def normalize(name: str) -> str:
     t_name = name.translate(TRANS)
     t_name = re.sub(r'\W', '_', t_name)
     return t_name
+
+
+t = normalize("in@mig.jpeg")
+l = normalize("файл.txt")
+print(t)
+print(l)

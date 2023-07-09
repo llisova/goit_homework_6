@@ -7,9 +7,9 @@ audio = []
 video = []
 archives = []
 other = []
-extensions = []
+extensions = set()
 unknown_ext = []
-
+folders = []
 
 file_list = {
     'images': images,
@@ -21,15 +21,11 @@ file_list = {
 }
 
 
-def get_extension(filename: str) -> str:
-    return Path(filename).suffix[1:].upper()
-
-
 def scan(folder: Path):
     for item in folder.iterdir():
         if item.is_dir():
             if item.name not in ('archives', 'video', 'audio', 'documents', 'images', 'other'):
-
+                folders.append(item)
                 scan(item)
             continue
         else:
@@ -38,22 +34,22 @@ def scan(folder: Path):
 
 
 def scan_file(file: Path):
-    ext = get_extension(file.name)
-    if ext == 'JPEG' or 'PNG' or 'JPG' or 'SVG':
+    ext = file.suffix[1:].upper()
+    if ext in ['JPEG', 'PNG', 'JPG', 'SVG']:
         images.append(file)
-        extensions.append(ext)
-    elif ext == 'AVI' or 'MP4' or 'MOV' or 'MKV':
+        extensions.add(ext)
+    elif ext in ['AVI', 'MP4', 'MOV', 'MKV']:
         video.append(file)
-        extensions.append(ext)
-    elif ext == 'DOC' or 'DOCX' or 'TXT' or 'PDF' or 'XLSX' or 'PPTX':
+        extensions.add(ext)
+    elif ext in ['DOC', 'DOCX', 'TXT', 'PDF', 'XLSX', 'PPTX']:
         documents.append(file)
-        extensions.append(ext)
-    elif ext == 'MP3' or 'OGG' or 'WAV' or 'AMR':
+        extensions.add(ext)
+    elif ext in ['MP3', 'OGG', 'WAV', 'AMR']:
         audio.append(file)
-        extensions.append(ext)
-    elif ext == 'ZIP':
+        extensions.add(ext)
+    elif ext in ['ZIP', 'RAR']:
         archives.append(file)
-        extensions.append(ext)
+        extensions.add(ext)
 
     else:
         unknown_ext.append(ext)
@@ -67,3 +63,5 @@ if __name__ == "__main__":
     print(f"Список файлів в категоріях {file_list}")
     print(f"Перелік відомих скрипту розширень {extensions}")
     print(f"Перелік невідомих скрипту розширень {unknown_ext}")
+    print(f"Інші{other}")
+    print(f'Folders{folders}')
